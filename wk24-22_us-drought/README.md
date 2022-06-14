@@ -5,7 +5,7 @@ My contribution to week 24 TidyTuesday: yearly drought score distributions since
 
 In my home state of Utah, we're no strangers to droughts. The past two years in particular have been especially painful.
 
-This week I was interested in how the past two years have compared to other stretches since 2000. The visualization showed that 2003-2005 was another brutal
+This week I was interested in how the past two years have compared to other stretches since 2000. The visualization showed that 2003-04 was another brutal
 stretch for Utahns. I also find it interesting that many of the serious droughts have *more* normal or bimodal distributions compared to a standard year that
 sees more of a chi-squared looking distribution.
 
