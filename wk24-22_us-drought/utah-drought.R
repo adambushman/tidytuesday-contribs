@@ -68,3 +68,5 @@ p1 <-
 
 
 p1 # Final
+
+ggsave(filename = 'utah-drought-final-t.jpeg', dpi = 90)
