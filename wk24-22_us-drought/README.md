@@ -1,3 +1,5 @@
+![Utah Drought Visualization](./utah-drought-final-viz.jpg)
+
 # US Drought | Week 24 - 2022, TidyTuesday
 My contribution to week 24 TidyTuesday: yearly drought score distributions since 2000 in the state of Utah.
 
