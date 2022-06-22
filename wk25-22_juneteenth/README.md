@@ -1,11 +1,11 @@
-![Emmancipation Progression](./emancipation-by-decade.jpg)
+![Emancipation Progression](./emancipation-by-decade.jpg)
 
 # Juneteenth | Week 25 - 2022, TidyTuesday
-My contribution to week 25 TidyTuesday: the progression of emmancipation during the celebration of Juneteenth.
+My contribution to week 25 TidyTuesday: the progression of emancipation during the celebration of Juneteenth.
 
 ## Description
 
-Juneteenth, or Emmancipation Day, celebrates the official ban of slavery in the United States.
+Juneteenth, or Emancipation Day, celebrates the official ban of slavery in the United States.
 
 This week I was interested in the census data, specifically how regions embraced emancipation throughout the decades. The visualization displays four geographic
 regions of the United States and 100% horizontal bar charts depicting the share of Free to Enslaved individuals. I worked to recreate a basic version of 
