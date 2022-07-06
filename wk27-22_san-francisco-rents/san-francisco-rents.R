@@ -78,7 +78,7 @@ p <-
     # Text
     text = element_text(family = "rajdhani", color = "#F8FCDA"), 
     plot.title = element_text(size = 20, face = "bold"), 
-    plot.subtitle = element_text(size = 15, face = "italic"), 
+    plot.subtitle = element_text(size = 15), 
     legend.text = element_text(size = 13), 
     legend.title = element_text(size = 15), 
     plot.caption = element_text(size = 13)
@@ -96,7 +96,8 @@ p <-
                 family = "rajdhani") +
   labs(title = "New Construction of Single Family Dwellings", 
        subtitle = "San Francisco & Surrounding Counties | Year: {frame_time}", 
-       fill = "Ssingle Family\nDwelling Production")
+       fill = "Single Family\nDwelling\nProduction", 
+       caption = "Data Source: data.sfgov.org\n\nVisualization by @adam_bushman")
 
 
 # Display and save
