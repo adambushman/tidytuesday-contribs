@@ -23,7 +23,7 @@ Refer to the .R file for a walkthrough of creating the visualization.
 Additional {tidyverse} packages for data manipulation
 
 ## TidyTuesday References
-[Week 25 TidyTuesday Repo](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-06-21)
+[Week 26 TidyTuesday Repo](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-06-28)
 
 ## Other Resources Used
 [Raincloud Plots](https://www.cedricscherer.com/2021/06/06/visualizing-distributions-with-raincloud-plots-and-how-to-create-them-with-ggplot2/)
