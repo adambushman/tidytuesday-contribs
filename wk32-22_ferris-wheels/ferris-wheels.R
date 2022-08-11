@@ -64,7 +64,7 @@ p <-
              labeller = label_wrap_gen(12)) +
   labs(
     title = "Ferris Wheels - Just How Tall?", 
-    subtitle = "Comparing ferris wheel heights to the tallest buildings in their respective countries", 
+    subtitle = "Comparing ferris wheel heights to the tallest buildings in their respective countries (for those featuring diameter measurements)", 
     y = "Height in Feet"
   ) +
   theme(
@@ -80,7 +80,7 @@ p <-
     plot.background = element_rect(fill = "#5D477A", color = NA), 
     plot.margin = margin(0.25, -2, 0.1, -2.5, "cm"), 
     plot.title = element_text(face = "bold"), 
-    plot.subtitle = element_text(size = 9), 
+    plot.subtitle = element_text(size = 7), 
     
     legend.position = "none", 
     
