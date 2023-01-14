@@ -16,6 +16,10 @@ bj_data <-
   mutate(country = stringr::str_sub(subnational1_code, 1, 2)) |> 
   filter(
     species_code == 'blujay' & country != 'XX'
+  ) |>
+  inner_join(
+    tuesdata$PFW_count_site_data_public_2021, 
+    by = c("loc_id" = "loc_id")
   )
 
 # Location frequency data
@@ -54,6 +58,30 @@ bj_month <-
     month_name = factor(month_name, levels = c(
       "November", "December", "January", "February", "March", "April"
     ))
+  )
+
+# Bluejay habitat
+
+bj_hab <-
+  bj_data |>
+  select(yard_type_pavement:hab_marsh) |>
+  pivot_longer(cols = everything(), names_to = "type", values_to = "obs") |>
+  group_by(type) |>
+  summarise(
+    observation = sum(!is.na(obs)), 
+    attempt = n(), 
+    .groups = 'drop'
+  ) |>
+  mutate(
+    share = observation / attempt, 
+    location = stringr::str_extract(type, "^[^_]*")
+  ) |>
+  (function(.) assign("hab", ., envir = .GlobalEnv))() |>
+  mutate(
+    type = factor(
+      type, 
+      levels = hab |> arrange(share) |> select(type) |> unlist(use.names = FALSE))
+    )
   )
 
 
@@ -108,3 +136,23 @@ ggplot(
   theme(
     axis.title.x = element_blank()
   )
+
+# Another chart about where to look
+
+ggplot(
+  bj_hab |> filter(location == "hab"), 
+  aes(share, type)
+) +
+  geom_point(
+    color = "#2B547E"
+  ) +
+  xlim(0.6, 1)
+
+ggplot(
+  bj_hab |> filter(location == "yard"), 
+  aes(share, type)
+) +
+  geom_point(
+    color = "#2B547E"
+  ) +
+  xlim(0.6, 1)
