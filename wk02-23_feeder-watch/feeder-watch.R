@@ -72,15 +72,17 @@ bj_hab <-
     attempt = n(), 
     .groups = 'drop'
   ) |>
+  filter(stringr::str_detect(type, "hab")) |>
   mutate(
     share = observation / attempt, 
-    location = stringr::str_extract(type, "^[^_]*")
+    location = stringr::str_extract(type, "^[^_]*"), 
+    sublocation = stringr::str_sub(type, 5, stringr::str_length(type)), 
   ) |>
   (function(.) assign("hab", ., envir = .GlobalEnv))() |>
   mutate(
-    type = factor(
-      type, 
-      levels = hab |> arrange(share) |> select(type) |> unlist(use.names = FALSE))
+    sublocation = factor(
+      sublocation, 
+      levels = hab |> arrange(share) |> select(sublocation) |> unlist(use.names = FALSE)
     )
   )
 
@@ -99,7 +101,8 @@ us_canada <-
     lat >= 22 & long <= -50
   )
 
-ggplot() +
+location <-
+  ggplot() +
   geom_map(
     data = us_canada, map = us_canada,
     aes(long, lat, map_id = region), 
@@ -119,10 +122,11 @@ ggplot() +
 
 # Column chart
 
-ggplot(
-  data = bj_month, 
-  aes(month_name, total_many)
-) +
+season <-
+  ggplot(
+    data = bj_month, 
+    aes(month_name, total_many)
+  ) +
   geom_col(
     fill = "#2B547E"
   ) +
@@ -139,20 +143,22 @@ ggplot(
 
 # Another chart about where to look
 
-ggplot(
-  bj_hab |> filter(location == "hab"), 
-  aes(share, type)
-) +
+habitat <-
+  ggplot(
+    bj_hab, 
+    aes(share, sublocation)
+  ) +
   geom_point(
     color = "#2B547E"
   ) +
-  xlim(0.6, 1)
+  scale_x_continuous(
+    labels = scales::label_percent()
+  ) +
+  labs(
+    x = "Frequency of Bluejay Sightings"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.y = element_blank()
+  )
 
-ggplot(
-  bj_hab |> filter(location == "yard"), 
-  aes(share, type)
-) +
-  geom_point(
-    color = "#2B547E"
-  ) +
-  xlim(0.6, 1)
