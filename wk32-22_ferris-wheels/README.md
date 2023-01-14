@@ -1,4 +1,4 @@
-![Ferris Wheel Heights](./ferris-wheels_final.png)
+![Ferris Wheel Heights](./ferris-wheels_final-viz.png)
 
 # Ferris Wheel Heights vs Tallest Buildings by Country | Week 32 - 2022, TidyTuesday
 My contribution to week 32 TidyTuesday: comparing ferris wheel heights to the tallest buildings in their respective countries.
