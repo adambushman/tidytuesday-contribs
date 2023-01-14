@@ -42,3 +42,37 @@ bj_month <-
   summarise(
     total_many = sum(how_many)
   )
+
+
+###
+# Visualization
+###
+
+
+# Map plot
+
+us_canada <- 
+  ggplot2::map_data("world") |>
+  filter(
+    region %in% c("Canada", "USA") &
+    lat >= 22 & long <= -50
+  )
+
+ggplot() +
+  geom_map(
+    data = us_canada, map = us_canada,
+    aes(long, lat, map_id = region), 
+    color = "white", fill = "lightgray"
+  ) +
+  geom_point(
+    data = bj_grouped, 
+    aes(longitude, latitude, size = total_many), 
+    color = "#2B547E", 
+    alpha = 0.3
+  ) + 
+  labs(
+    size = "Observations"
+  ) +
+  theme_void()
+
+
