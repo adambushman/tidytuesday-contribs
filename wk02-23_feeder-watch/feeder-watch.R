@@ -41,6 +41,19 @@ bj_month <-
   ) |>
   summarise(
     total_many = sum(how_many)
+  ) |>
+  mutate(
+    month_name = case_when(
+      Month == 1 ~ "January", 
+      Month == 2 ~ "February", 
+      Month == 3 ~ "March", 
+      Month == 4 ~ "April", 
+      Month == 11 ~ "November", 
+      Month == 12 ~ "December" 
+    ), 
+    month_name = factor(month_name, levels = c(
+      "November", "December", "January", "February", "March", "April"
+    ))
   )
 
 
@@ -76,3 +89,22 @@ ggplot() +
   theme_void()
 
 
+# Column chart
+
+ggplot(
+  data = bj_month, 
+  aes(month_name, total_many)
+) +
+  geom_col(
+    fill = "#2B547E"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(big.mark = ",")
+  ) +
+  labs(
+    y = "Observations"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank()
+  )
