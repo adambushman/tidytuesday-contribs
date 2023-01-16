@@ -1,4 +1,19 @@
 library('tidyverse')
+library('patchwork')
+
+
+###
+# Visualization Setup
+###
+
+camcorder::gg_record(
+  dir = "C:/Users/Adam Bushman/Pictures/_test", 
+  device = "png", 
+  width = 14, 
+  height = 10, 
+  units = "cm", 
+  dpi = 300
+)
 
 
 ###
@@ -98,10 +113,10 @@ us_canada <-
   ggplot2::map_data("world") |>
   filter(
     region %in% c("Canada", "USA") &
-    lat >= 22 & long <= -50
+    lat >= 22 & lat <= 60 & long <= -50 & long >= -125
   )
 
-location <-
+#location <-
   ggplot() +
   geom_map(
     data = us_canada, map = us_canada,
@@ -117,7 +132,11 @@ location <-
   labs(
     size = "Observations"
   ) +
-  theme_void()
+  #theme_void() +
+  theme(
+    legend.position = "bottom", 
+    plot.background = element_rect(fill ="yellow")
+  )
 
 
 # Column chart
@@ -130,15 +149,14 @@ season <-
   geom_col(
     fill = "#2B547E"
   ) +
+  coord_flip() +
   scale_y_continuous(
     labels = scales::label_number(big.mark = ",")
-  ) +
-  labs(
-    y = "Observations"
-  ) +
+  ) + 
   theme_minimal() +
   theme(
-    axis.title.x = element_blank()
+    axis.title = element_blank(), 
+    plot.background = element_rect(fill ="green")
   )
 
 # Another chart about where to look
@@ -159,6 +177,25 @@ habitat <-
   ) +
   theme_minimal() +
   theme(
-    axis.title.y = element_blank()
+    axis.title.y = element_blank(), 
+    plot.background = element_rect(fill ="red")
   )
 
+
+###
+# Patchwork arrangement
+###
+
+lay <- "
+  111133
+  111133
+  111122
+  111122
+"
+
+location +
+  season +
+  habitat +
+  plot_layout(
+    design = lay
+  )
