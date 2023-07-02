@@ -1,30 +1,29 @@
-![Habitat Preferences](./habitat-preferences_data-viz.png)
+![Utah state historical markers adjusted for population](./utah-historical-markers_final.png)
 
-# Habitat Preferences by Sex of Oregon Spotted Frogs | Week 31 - 2022, TidyTuesday
-My contribution to week 31 TidyTuesday: a statistical look at the habitat preferences of Oregon Spotted Frogs.
+# Utah historical markers \| Week 27 - 2023, TidyTuesday
+
+My contribution to week 27 TidyTuesday: a visual look into the misalignment of population trends and historical marker distribution throughout Utah counties.
 
 ## Description
 
-This week's #TidyTuesday featured a dataset on observations of Oregon Spotted Frogs, including such features as habitat, sex, water, etc. 
-I decided to visualize the observations by gender and habitat type, specifically using statistics to judge if habitat preferences are the same between male and 
-female frogs. 
+This week's #TidyTuesday featured a data set on historical markers throughout the United States. Specifically, where they are located, what they are called, and in some cases when they were erected.
 
-The exporatory data analysis and subsequent data visualization communicated that male frogs are much more likely to frequent rivers while females are found more 
-often in ponds and reservoirs.
+I became interested in Utah's historical landmark distribution throughout the state. It became clear most were concentrated in densely populated counties. However, I began to wonder if, after adjusting for population, the same trend would apply. The exploratory analysis and visualization explain this question.
 
-I was able to practice several data viz principles through this project: multiple plots in a single data viz and rastering a table as an image.
-Refer to the .R file for a walkthrough of creating the visualization.
+I was able to practice several data viz principles through this project: tiled maps, plotting polygons, advanced annotations, and styled text. Refer to the .qmd file for a walk through of creating the visualization.
 
 ## Core Packages I Use
+
 {ggplot2} for core data visualization
 
-{patchwork} for assembling the various plots
-
-{flextable} for designing the table and converting it to a rasterable image
+{tidycensus} for collecting county level population data
 
 {camcorder} to produce the final PNG
+
+{adamb} to calculate the text color for ideal contrast to a background color
 
 Additional {tidyverse} packages for data manipulation
 
 ## TidyTuesday References
-[Week 31 TidyTuesday Repo](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-08-02)
+
+[Week 27, 2023 TidyTuesday Repo](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-07-04/readme.md)
