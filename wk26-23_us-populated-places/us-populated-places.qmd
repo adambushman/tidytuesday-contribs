@@ -9,7 +9,6 @@ description: "Contribution to week 26 TidyTuesday: visualizing populated places 
 
 library('tidyverse')
 library('camcorder')
-library('tidycensus')
 library('here')
 
 here::i_am("us-populated-places.qmd")
@@ -34,3 +33,79 @@ us_place_history <-
 
 ```
 
+Data prep
+
+```{r}
+
+my_colors <- list(
+  background = "#FFF1D6", 
+  lines = "#481D24", 
+  primary = "#C5283D", 
+  secondary = "#255F85"
+)
+
+my_states <- c(
+  "Maine", "New Hampshire", "Vermont", "Massachusetts", "Conneticut", "New York", "Delaware", "Pennsylvania"
+)
+
+is_colonial <- function(text) {
+  digits <- str_extract_all(text, "\\b\\d+\\b")[[1]]
+  return(any(as.numeric(digits) < 1800))
+}
+
+us_geo_data <- 
+  us_place_names %>%
+  filter(
+    state_name %in% my_states & 
+      !is.na(prim_long_dec) &
+      !is.na(prim_lat_dec)
+  ) %>%
+  inner_join(
+    us_place_history, 
+    by = "feature_id"
+  ) %>%
+  filter(
+    !is.na(history)
+  ) %>%
+  mutate(
+    is_colonial = purrr::map_lgl(history, is_colonial)
+  ) %>%
+  filter(is_colonial) %>%
+  usmap::usmap_transform(
+    input_names = c("prim_long_dec", "prim_lat_dec")
+  )
+
+```
+
+```{r}
+
+gg_record(
+  dir = 'C:/Users/Adam Bushman/Pictures/Camcorder', 
+  device = 'png', 
+  height = 9, 
+  width = 16, 
+  units = "cm", 
+  dpi = 300
+)
+
+```
+
+```{r}
+
+usmap::plot_usmap(
+  regions = "states", 
+  include = my_states, 
+  fill = my_colors$background, 
+  color = my_colors$lines
+) +
+  geom_point(
+    aes(x, y), 
+    us_geo_data, 
+    color = "red", alpha = 0.5, 
+    size = 3
+  ) +
+  theme(
+    plot.background = 
+  )
+
+```
