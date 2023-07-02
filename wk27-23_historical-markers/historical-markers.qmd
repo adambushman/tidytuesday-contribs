@@ -7,10 +7,16 @@ description: "Contribution to week 27 TidyTuesday: visualizing historical marker
 
 library('tidyverse')
 library('camcorder')
+library('tidycensus')
+library('here')
+
+here::i_am("historical-markers.qmd")
 
 ```
 
 ```{r}
+
+# Load marker data
 
 utah_markers <- 
   readr::read_csv(
@@ -18,13 +24,27 @@ utah_markers <-
   ) %>%
   filter(state_or_prov == "Utah")
 
-load('D:/All Repos/tidytuesday-contribs/wk27-23_historical-markers/utah_county_tiles.rds')
+# Load county population data
+
+county_pop <-
+  tidycensus::get_acs(
+    geography = "county", 
+    variables = "B01003_001", 
+    state = "UT", 
+    geometry = FALSE,
+    year = 2020
+  )
+
+# Load county tile data
+
+load(here("utah_county_tiles.rds"))
 
 ```
 
+
 ```{r}
 
-grouped_markers<- 
+grouped_markers <- 
   utah_markers %>%
   select(title, county_or_parish) %>%
   mutate(county_or_parish = stringr::str_replace(county_or_parish, " County", "")) %>%
@@ -32,11 +52,20 @@ grouped_markers<-
   summarise(count = n()) %>%
   ungroup()
 
+county_adj <- 
+  county_pop %>%
+    mutate(county = stringr::str_replace(NAME, " County, Utah", "")) %>%
+    select(county, estimate)
+
 utah_counties <- 
   inner_join(
     uc_tiles, 
     grouped_markers, 
     by = c("id" = "county_or_parish")
+  ) %>%
+  inner_join(
+    county_adj, 
+    by = c("id" = "county")
   )
 
 ```
