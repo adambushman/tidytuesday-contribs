@@ -1,0 +1,36 @@
+---
+title: "US Populated Places"
+description: "Contribution to week 26 TidyTuesday: visualizing populated places in the United States"
+---
+
+# Historical Markers
+
+```{r}
+
+library('tidyverse')
+library('camcorder')
+library('tidycensus')
+library('here')
+
+here::i_am("us-populated-places.qmd")
+
+```
+
+Load data
+
+```{r}
+
+# Load place data
+
+us_place_names <- 
+  readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-27/us_place_names.csv'
+  )
+
+us_place_history <- 
+  readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-27/us_place_history.csv'
+  )
+
+```
+
