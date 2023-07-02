@@ -3,6 +3,8 @@ title: "Historical Markers"
 description: "Contribution to week 27 TidyTuesday: visualizing historical markers"
 ---
 
+# Historical Markers
+
 ```{r}
 
 library('tidyverse')
@@ -13,6 +15,8 @@ library('here')
 here::i_am("historical-markers.qmd")
 
 ```
+
+First, we load the data. The marker data set comes from the *Historical Marker Database USA Index*, provided via the #TidyTuesday forum. I also collected county population data from the *{tidycensus}* package. Lastly, to achieve the tile map, I loaded a shape set generated from a package I'm designing that makes custom tiled maps.
 
 ```{r}
 
@@ -41,6 +45,13 @@ load(here("utah_county_tiles.rds"))
 
 ```
 
+I next manipulated some of the data:
+
+*   Filtering for Utah state markers
+*   Summarizing the count of markers by county
+*   Cleaning up the county names to facilitate joining the data sets
+*   Joining the disparate data
+*   Creating the "per 1,000 residents" variable
 
 ```{r}
 
@@ -73,6 +84,7 @@ utah_counties <-
 
 ```
 
+Next, I setup the camcorder to create a high res, nicely scaled visualization.
 
 ```{r}
 
@@ -86,6 +98,8 @@ gg_record(
 )
 
 ```
+
+I also setup the colors and scales. Using *{RColorBrewer}* and some other custom functions, I created a gradient variable for the background and a variable for the contrasting text. 
 
 ```{r}
 
@@ -115,6 +129,9 @@ utah_counties <-
 
 ```
 
+Finally, I setup the the title, subtitle, and caption texts with the appropriate markdown styling and then constructed the plot.
+
+I added several annotations to highlight the extremes of population adjusted historical marker concentration.
 
 ```{r}
 
