@@ -66,6 +66,9 @@ utah_counties <-
   inner_join(
     county_adj, 
     by = c("id" = "county")
+  ) %>%
+  mutate(
+    per_1k = (count / estimate) * 1000
   )
 
 ```
@@ -73,17 +76,81 @@ utah_counties <-
 
 ```{r}
 
+my_colors = list(
+  high = "#f5c900", 
+  low = "#183182", 
+  background = "#FFFFFF"
+)
+
+my_title = glue::glue(
+  "Utah state historical markers **do not**<br>", 
+  "follow <span style='color:{my_colors$high}'>**population concentration**</span>"
+)
+
+my_subtitle = glue::glue(
+  "Number of markers per 1,000 residents as of 2020 US census"
+)
+
+my_caption = glue::glue(
+  ""
+)
+
 ggplot() +
   geom_polygon(
-    aes(x, y, group = id, fill = count), 
-    data = utah_counties
+    aes(x, y, group = id, fill = per_1k), 
+    data = utah_counties, 
+    show.legend = FALSE
   ) +
   geom_text(
     aes(center_x, center_y, label = id), 
     data = utah_counties %>% select(-c(x, y)), 
-    size = 2.5
+    size = 1.75
   ) +
-  coord_equal() +
-  theme_void()
+  scale_fill_gradient(
+    low = my_colors$low, high = my_colors$high
+  ) +
+  labs(
+    title = my_title, 
+    subtitle = my_subtitle,
+    caption = 
+  ) +
+  # Salt Lake County
+  annotate(
+    "segment", x = 27, y = 54.5, xend = 60, yend = 54.5, 
+    lwd = 0.5, color = "black"
+  ) +
+  annotate(
+    "point", x = 27, y = 54.5, size = 1.5, color = "black"
+  ) +
+  annotate(
+    "text", x = 75, y = 54.5, hjust = 1, 
+    size = 3, color = "black", 
+    label = "Salt Lake County has\n158 markers for\nappox. 1.1M residents"
+  ) +
+  # Wayne County
+  annotate(
+    "segment", x = 27, y = 21.5, xend = 60, yend = 21.5, 
+    lwd = 0.5, color = "black"
+  ) +
+    annotate(
+    "point", x = 27, y = 21.5, size = 1.5, color = "black"
+  ) +
+  annotate(
+    "text", x = 75, y = 21.5, hjust = 1, 
+    size = 3, color = "black", 
+    label = "Wayne County has\n10 markers for\nappox. 3K residents"
+  ) +
+  # coord_equal() +
+  theme_void() +
+  theme(
+    plot.title = ggtext::element_markdown(size = 18), 
+    plot.subtitle = ggtext::element_markdown(size = 10), 
+    plot.background = element_rect(fill = my_colors$background, color = NA), 
+    
+    plot.margin = margin(0.5, 1, 0.5, 1, "cm")
+  )
 
 ```
+
+
+
