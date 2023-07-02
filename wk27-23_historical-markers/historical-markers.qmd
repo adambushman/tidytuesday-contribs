@@ -87,78 +87,131 @@ gg_record(
 
 ```
 
-
 ```{r}
 
 my_colors = list(
-  high = "#f5c900", 
+  high = "#ff930f", 
   low = "#183182", 
   background = "#FFFFFF"
 )
 
+color_scale = colorRampPalette(c(my_colors$low, my_colors$high))
+gradient_colors = color_scale(nrow(utah_counties))
+
+map_gradient <- function(val, min, max) {
+  scaled_value <- (val - min) / (max - min)
+  
+  index <- floor(scaled_value * (length(gradient_colors) - 1)) + 1
+  
+  gradient_colors[index]
+}
+
+utah_counties <-
+  utah_counties %>%
+  mutate(
+    background_color = map_gradient(per_1k, min(per_1k), max(per_1k)), 
+    text_color = purrr::map_chr(background_color, adamb::contrast_text_color)
+  )
+
+```
+
+
+```{r}
+
 my_title = glue::glue(
-  "Utah state historical markers **do not**<br>", 
-  "follow <span style='color:{my_colors$high}'>**population concentration**</span>"
+  "Utah state population trends **have not**<br>", 
+  "aligned with <span style='color:{my_colors$high}'>**historical markers**</span>"
 )
 
 my_subtitle = glue::glue(
-  "Number of markers per 1,000 residents as of 2020 US census"
+  "Number of markers in each county per 1,000 residents as of 2020 US census<br><span style='color:{my_colors$high}'>**HIGH**</span> and <span style='color:{my_colors$low}'>**LOW**</span> concentration of population adjusted markers"
 )
 
-my_caption = glue::glue(
-  ""
+my_caption = paste0(
+  "Source: Historical Marker Database USA Index & {tidycensus} package\n", 
+  "Designed by Adam Bushman (@adam_bushman)"
 )
 
 ggplot() +
   geom_polygon(
-    aes(x, y, group = id, fill = per_1k), 
+    aes(x, y, group = id, fill = background_color), 
     data = utah_counties, 
     show.legend = FALSE
   ) +
   geom_text(
-    aes(center_x, center_y, label = id), 
+    aes(center_x, center_y, label = id, color = text_color), 
     data = utah_counties %>% select(-c(x, y)), 
-    size = 1.75
+    size = 2.75
   ) +
-  scale_fill_gradient(
-    low = my_colors$low, high = my_colors$high
-  ) +
+  scale_fill_identity() +
+  scale_color_identity() + 
+  scale_x_continuous(expand = c(0,0)) +
   labs(
     title = my_title, 
     subtitle = my_subtitle,
-    caption = 
+    caption = my_caption
   ) +
   # Salt Lake County
   annotate(
-    "segment", x = 27, y = 54.5, xend = 60, yend = 54.5, 
+    "segment", x = 27, y = 54.5, xend = 85, yend = 54.5, 
     lwd = 0.5, color = "black"
   ) +
   annotate(
     "point", x = 27, y = 54.5, size = 1.5, color = "black"
   ) +
   annotate(
-    "text", x = 75, y = 54.5, hjust = 1, 
-    size = 3, color = "black", 
-    label = "Salt Lake County has\n158 markers for\nappox. 1.1M residents"
+    "text", x = 85, y = 54.5, hjust = 1, vjust = -2, 
+    size = 4, color = "black", lineheight = 0.8, fontface = "bold", 
+    label = "Salt Lake County"
+  ) +
+  annotate(
+    "text", x = 85, y = 54.5, hjust = 1, vjust = -0.75, 
+    size = 3.5, color = "black", lineheight = 0.8, 
+    label = "Population outpaced markers"
+  ) +
+  annotate(
+    "text", x = 74, y = 54.5, hjust = -0.1, vjust = 1.45, 
+    size = 4, color = "black", lineheight = 2, 
+    label = "markers\nresidents"
+  ) +
+  annotate(
+    "text", x = 74, y = 54.5, hjust = 1, vjust = 1.1, 
+    size = 10, color = my_colors$low, lineheight = 0.8, 
+    fontface = "bold", label = "158\n~1M"
   ) +
   # Wayne County
   annotate(
-    "segment", x = 27, y = 21.5, xend = 60, yend = 21.5, 
+    "segment", x = 27, y = 21.5, xend = 85, yend = 21.5, 
     lwd = 0.5, color = "black"
   ) +
-    annotate(
+  annotate(
     "point", x = 27, y = 21.5, size = 1.5, color = "black"
   ) +
   annotate(
-    "text", x = 75, y = 21.5, hjust = 1, 
-    size = 3, color = "black", 
-    label = "Wayne County has\n10 markers for\nappox. 3K residents"
+    "text", x = 85, y = 21.5, hjust = 1, vjust = -2, 
+    size = 4, color = "black", lineheight = 0.8, fontface = "bold", 
+    label = "Wayne County"
   ) +
-  # coord_equal() +
+  annotate(
+    "text", x = 85, y = 21.5, hjust = 1, vjust = -0.75, 
+    size = 3.5, color = "black", lineheight = 0.8, 
+    label = "Markers outpaced population"
+  ) +
+    annotate(
+    "text", x = 74, y = 21.5, hjust = -0.1, vjust = 1.45, 
+    size = 4, color = "black", lineheight = 2, 
+    label = "markers\nresidents"
+  ) +
+  annotate(
+    "text", x = 74, y = 21.5, hjust = 1, vjust = 1.1, 
+    size = 10, color = my_colors$high, lineheight = 0.8, 
+    fontface = "bold", label = "10\n~3K"
+  ) +
   theme_void() +
   theme(
-    plot.title = ggtext::element_markdown(size = 18), 
-    plot.subtitle = ggtext::element_markdown(size = 10), 
+    plot.title = ggtext::element_markdown(size = 22, lineheight = 1), 
+    plot.subtitle = ggtext::element_markdown(size = 12, lineheight = 1), 
+    plot.caption = element_text(size = 8, hjust = 0), 
     plot.background = element_rect(fill = my_colors$background, color = NA), 
     
     plot.margin = margin(0.5, 1, 0.5, 1, "cm")
