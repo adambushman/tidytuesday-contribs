@@ -1,0 +1,60 @@
+---
+title: "Historical Markers"
+description: "Contribution to week 27 TidyTuesday: visualizing historical markers"
+---
+
+```{r}
+
+library('tidyverse')
+library('camcorder')
+
+```
+
+```{r}
+
+utah_markers <- 
+  readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-04/historical_markers.csv'
+  ) %>%
+  filter(state_or_prov == "Utah")
+
+load('D:/All Repos/tidytuesday-contribs/wk27-23_historical-markers/utah_county_tiles.rds')
+
+```
+
+```{r}
+
+grouped_markers<- 
+  utah_markers %>%
+  select(title, county_or_parish) %>%
+  mutate(county_or_parish = stringr::str_replace(county_or_parish, " County", "")) %>%
+  group_by(county_or_parish) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+utah_counties <- 
+  inner_join(
+    uc_tiles, 
+    grouped_markers, 
+    by = c("id" = "county_or_parish")
+  )
+
+```
+
+
+```{r}
+
+ggplot() +
+  geom_polygon(
+    aes(x, y, group = id, fill = count), 
+    data = utah_counties
+  ) +
+  geom_text(
+    aes(center_x, center_y, label = id), 
+    data = utah_counties %>% select(-c(x, y)), 
+    size = 2.5
+  ) +
+  coord_equal() +
+  theme_void()
+
+```
