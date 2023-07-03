@@ -9,6 +9,7 @@ description: "Contribution to week 26 TidyTuesday: visualizing populated places 
 
 library('tidyverse')
 library('camcorder')
+library('ggrepel')
 library('here')
 
 here::i_am("us-populated-places.qmd")
@@ -50,7 +51,7 @@ my_states <- c(
 
 is_colonial <- function(text) {
   digits <- str_extract_all(text, "\\b\\d+\\b")[[1]]
-  return(any(as.numeric(digits) < 1800))
+  return(any(as.numeric(digits) < 1800 & as.numeric(digits) > 1000))
 }
 
 us_geo_data <- 
@@ -68,7 +69,19 @@ us_geo_data <-
     !is.na(history)
   ) %>%
   mutate(
-    is_colonial = purrr::map_lgl(history, is_colonial)
+    is_colonial = purrr::map_lgl(history, is_colonial), 
+    indian_name = stringr::str_detect(stringr::str_to_lower(history), "indian"), 
+    state_abb = case_when(
+        state_name == "Maine" ~ "ME", 
+        state_name == "New Hampshire" ~ "NH", 
+        state_name == "Vermont" ~ "VT", 
+        state_name == "Massachusetts" ~ "MA", 
+        state_name == "Conneticut" ~ "CT", 
+        state_name == "New York" ~ "NY", 
+        state_name == "Delaware" ~ "DE", 
+        state_name == "Pennsylvania" ~ "PA", 
+        TRUE ~ "X"
+    )
   ) %>%
   filter(is_colonial) %>%
   usmap::usmap_transform(
@@ -100,12 +113,31 @@ usmap::plot_usmap(
 ) +
   geom_point(
     aes(x, y), 
-    us_geo_data, 
-    color = "red", alpha = 0.5, 
-    size = 3
+    us_geo_data %>% filter(!indian_name), 
+    color = my_colors$secondary, 
+    alpha = 0.35, 
+    size = 3, 
+    show.legend = FALSE
   ) +
-  theme(
-    plot.background = 
-  )
+  geom_point(
+    aes(x, y), 
+    us_geo_data %>% filter(indian_name), 
+    color = my_colors$primary, 
+    alpha = 0.75, 
+    size = 4, 
+    show.legend = FALSE
+  ) +
+  geom_text_repel(
+    aes(x, y, label = paste(feature_name, state_abb, sep = ", ")), 
+    us_geo_data %>% filter(indian_name), 
+    direction = "y", 
+    box.padding = 0.5, 
+    min.segment.length = 2, 
+    max.overlaps = Inf, 
+    nudge_x = 2
+  ) +
+  scale_color_identity() +
+  scale_size_identity() +
+  scale_alpha_identity()
 
 ```
