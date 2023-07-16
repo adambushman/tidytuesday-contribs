@@ -1,3 +1,5 @@
+![TidyTuesday Banner](./tidy-tuesday-banner.png)
+
 # TidyTuesday Contributions
 My contributions to the weekly #TidyTuesday visualization community
 
